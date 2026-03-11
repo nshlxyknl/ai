@@ -81,37 +81,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-3">
-          <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 px-3 py-2">
-           Specification based AI
-          </div>
-          <button
-            onClick={() => setProvider('gemini')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg mb-1 transition-colors ${
-              provider === 'gemini'
-                ? 'bg-white dark:bg-[#2a2a2a]'
-                : 'hover:bg-white dark:hover:bg-[#2a2a2a]'
-            }`}
-          >
-            <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold">
-              
-            </div>
-            <span className="text-sm">Academics & Research</span>
-          </button>
-          <button
-            onClick={() => setProvider('grok')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-              provider === 'grok'
-                ? 'bg-white dark:bg-[#2a2a2a]'
-                : 'hover:bg-white dark:hover:bg-[#2a2a2a]'
-            }`}
-          >
-            <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-bold">
-              
-            </div>
-            <span className="text-sm">Social Trends & Discussion</span>
-          </button>
-        </div>
+       
       </div>
 
       {/* Main Chat Area */}
