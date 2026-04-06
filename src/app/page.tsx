@@ -106,7 +106,7 @@ export default function Home() {
               {messages.map((msg, idx) => (
                 <div key={idx} className={`mb-8 ${msg.role === 'user' ? '' : 'bg-[#f7f7f8] dark:bg-[#2a2a2a] -mx-4 px-4 py-6'}`}>
                   <div className="max-w-3xl mx-auto flex gap-4">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       {msg.role === 'user' ? (
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
                           U
