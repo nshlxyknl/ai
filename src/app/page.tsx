@@ -91,7 +91,7 @@ export default function Home() {
           {messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center max-w-2xl px-4">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center">
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                   </svg>
@@ -108,7 +108,7 @@ export default function Home() {
                   <div className="max-w-3xl mx-auto flex gap-4">
                     <div className="shrink-0">
                       {msg.role === 'user' ? (
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                        <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
                           U
                         </div>
                       ) : (
@@ -132,7 +132,7 @@ export default function Home() {
               {loading && (
                 <div className="mb-8 bg-[#f7f7f8] dark:bg-[#2a2a2a] -mx-4 px-4 py-6">
                   <div className="max-w-3xl mx-auto flex gap-4">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold ${
                         provider === 'gemini' ? 'bg-blue-500' : 'bg-purple-500'
                       }`}>
