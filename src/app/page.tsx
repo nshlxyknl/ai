@@ -129,6 +129,7 @@ export default function Home() {
                   </div>
                 </div>
               ))}
+              
               {loading && (
                 <div className="mb-8 bg-[#f7f7f8] dark:bg-[#2a2a2a] -mx-4 px-4 py-6">
                   <div className="max-w-3xl mx-auto flex gap-4">
