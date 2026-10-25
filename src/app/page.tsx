@@ -204,8 +204,8 @@ export default function ChatPage() {
             onChange={(e) => setProvider(e.target.value as AIProvider)}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-[#2a2a2a] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="gemini">Gemini</option>
-            <option value="grok">Grok</option>
+            <option value="gemini">Gemini (free)</option>
+            <option value="grok">Grok (free via Groq)</option>
           </select>
         </div>
       </div>

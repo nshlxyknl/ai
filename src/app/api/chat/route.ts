@@ -88,66 +88,76 @@ async function callGemini(messages: Message[]): Promise<ChatResult> {
   };
 }
 
+interface GroqExecutedTool {
+  type?: string;
+  search_results?: {
+    results?: Array<{ title?: string; url?: string }>;
+  };
+}
+
 async function callGrok(messages: Message[]): Promise<ChatResult> {
-  const apiKey = process.env.GROK_API_KEY;
+  const apiKey = process.env.GROK_API_KEY || process.env.GROQ_API_KEY;
   if (!apiKey) {
-    throw new Error('Grok API key not configured');
+    throw new Error('Groq API key not configured');
   }
 
   const client = new OpenAI({
     apiKey,
-    baseURL: 'https://api.x.ai/v1',
+    baseURL: 'https://api.groq.com/openai/v1',
   });
 
-  let response;
+  let completion;
   try {
-    response = await client.responses.create({
-      model: 'grok-4.7',
-      instructions: SYSTEM_INSTRUCTION,
-      input: messages.map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-      })),
-      tools: [{ type: 'web_search' }],
-      store: false,
+    completion = await client.chat.completions.create({
+      model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+      messages: [
+        {
+          role: 'system',
+          content: `${SYSTEM_INSTRUCTION}
+
+Current date: ${new Date().toISOString().slice(0, 10)}. Use the browser_search tool for current events and recent information. Cite sources inline as markdown links using the URLs from the search results when possible.`,
+        },
+        ...messages.map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+        })),
+      ],
+      tools: [{ type: 'browser_search' }] as unknown as OpenAI.Chat.ChatCompletionTool[],
+      tool_choice: 'auto',
+      temperature: 1,
+      max_completion_tokens: 2048,
+      reasoning_effort: 'low',
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
-    if (/incorrect api key|invalid api key|unauthorized/i.test(message)) {
+    if (/invalid api key|unauthorized/i.test(message)) {
       throw new Error(
-        'GROK_API_KEY is not a valid xAI key. xAI keys start with "xai-" (the current value looks like a Groq key). Create one at https://console.x.ai.'
+        'GROK_API_KEY is not a valid Groq key. Create one at https://console.groq.com/keys.'
       );
     }
     throw error;
   }
 
+  const choice = completion.choices[0];
+  const message = (choice?.message?.content ?? '').replace(/【[^】]*】/g, '').trim();
+  const executedTools =
+    (choice?.message as unknown as { executed_tools?: GroqExecutedTool[] })?.executed_tools ?? [];
+
   const sources: Source[] = [];
-  const citations = (response as unknown as { citations?: string[] }).citations ?? [];
-
-  for (const url of citations) {
-    sources.push({ title: formatTitle(url), url });
-  }
-
-  for (const item of response.output) {
-    if (item.type !== 'message') continue;
-
-    for (const part of item.content) {
-      if (part.type !== 'output_text') continue;
-
-      for (const annotation of part.annotations) {
-        if (annotation.type === 'url_citation') {
-          sources.push({
-            title: annotation.title || formatTitle(annotation.url),
-            url: annotation.url,
-          });
-        }
+  for (const tool of executedTools) {
+    for (const result of tool.search_results?.results ?? []) {
+      if (result.url) {
+        sources.push({
+          title: result.title || formatTitle(result.url),
+          url: result.url,
+        });
       }
     }
   }
 
   return {
-    message: response.output_text || 'No response',
-    sources: dedupeSources(sources),
+    message: message || 'No response',
+    sources: dedupeSources(sources).slice(0, 6),
   };
 }
 
