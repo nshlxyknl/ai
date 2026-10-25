@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dashboard - Business Analytics",
-  description: "Modern business dashboard with analytics, user management, and real-time insights",
+  title: "Chat AI",
+  description: "Chat with Gemini and Grok",
 };
 
 export default function RootLayout({
